@@ -6,23 +6,12 @@ import java.util.Arrays;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.function.VoidFunction;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.RowFactory;
-import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.catalog.Function;
-import org.apache.spark.sql.types.DataTypes;
-import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.twitter.TwitterUtils;
 
-import scala.Tuple2;
 import twitter4j.Status;
 /**
 * Java-Spark-Training-Course
@@ -33,6 +22,9 @@ import twitter4j.Status;
 */
 
 public class TwitterStreaming {
+	
+	
+	//Credentials
 	final static String consumerKey = "";
 	final static String consumerSecret = "";
 	final static String accessToken = "";
@@ -42,11 +34,13 @@ public class TwitterStreaming {
 	public static void main(String[] args) throws InterruptedException {
 
 
-		//Logger
+		//Logger less verbose
 		Logger.getLogger("org").setLevel(Level.ERROR);
 
-		//Consumer API keys
-		String[] filters = {"trump"};
+		
+		SparkConf sparkConf = new SparkConf().setAppName("TwitterStreaming").setMaster("local[*]");
+
+		JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, new Duration(2000));
 
 
 		// can use them to generate OAuth credentials
@@ -55,21 +49,28 @@ public class TwitterStreaming {
 		System.setProperty("twitter4j.oauth.accessToken", accessToken);
 		System.setProperty("twitter4j.oauth.accessTokenSecret", accessTokenSecret);
 
-		SparkConf sparkConf = new SparkConf().setAppName("JavaTwitterHashTagJoinSentiments").setMaster("local[*]");
-
-		JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, new Duration(2000));
-
-		JavaReceiverInputDStream<Status> stream = TwitterUtils.createStream(jssc, filters);
-
-
-		//take words from twitter
-		JavaDStream<String> words = stream.flatMap( status -> Arrays.asList(status.getText().split(" ")).iterator() );
 		
-		words.print();
-
+		
+		String[] filters = {"trump"};
 		
 	
 
+		
+		
+		//Stream
+		JavaReceiverInputDStream<Status> stream = TwitterUtils.createStream(jssc, filters);
+
+
+		//take words from twitter just to try the flatMap
+		JavaDStream<String> words = stream.flatMap( status -> Arrays.asList(status.getText().split(" ")).iterator() );
+		
+
+		//Try map functions here
+		JavaDStream<Object> user = stream.map(status -> status.getUser());
+
+		words.print();
+		user.print();
+		
 		jssc.start();
 		jssc.awaitTermination();
 	}
