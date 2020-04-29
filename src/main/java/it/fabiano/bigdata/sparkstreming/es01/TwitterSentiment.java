@@ -31,10 +31,10 @@ public class TwitterSentiment  {
 	public static void main(String[] args) throws InterruptedException  {
 
 		//Logger
-		Logger.getLogger("org").setLevel(Level.ERROR);
+		//Logger.getLogger("org").setLevel(Level.ERROR);
 
 		
-		String[] filters = {"trump"};
+		String[] filters = {"congiunti"};
 
 
 
@@ -43,8 +43,9 @@ public class TwitterSentiment  {
 		System.setProperty("twitter4j.oauth.accessToken", accessToken);
 		System.setProperty("twitter4j.oauth.accessTokenSecret", accessTokenSecret);
 
-		SparkConf sparkConf = new SparkConf().setAppName("JavaTwitterHashTagJoinSentiments").setMaster("local[*]");
-
+		//SparkConf sparkConf = new SparkConf().setAppName("JavaTwitterHashTagJoinSentiments").setMaster("master:7077");
+		SparkConf sparkConf = new SparkConf().setAppName("JavaTwitterHashTagJoinSentiments");
+		
 		JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, new Duration(2000));
 
 		JavaReceiverInputDStream<Status> stream = TwitterUtils.createStream(jssc, filters);
@@ -52,8 +53,7 @@ public class TwitterSentiment  {
 		
 		JavaDStream<String> tweets = stream.map(status -> status.getText());
 		
-		String s= "";
-		s.length();
+		
 		
 		JavaPairDStream<String, String> tweetWithScoreDStream =
 				tweets.mapToPair(tweetText -> 
@@ -65,7 +65,7 @@ public class TwitterSentiment  {
 		JavaPairDStream<String, String> tweetWithSentiment =
 				tweets.mapToPair(tweetText -> 
 				new Tuple2<>(
-						"TWEET SIZe: "+tweetText.length(), 
+						"TWEET: "+tweetText, 
 						"SENTIMENT: "+SentimentAnalyzer.getSimplifiedSentiment(tweetText)));
 		
 		

@@ -15,30 +15,15 @@
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-core_2.12</artifactId>
-			<version>2.4.1</version>
-		</dependency>
-
-
-		<!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql -->
-		<dependency>
-			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-sql_2.12</artifactId>
-			<version>2.4.1</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.apache.spark/spark-mllib -->
-		<dependency>
-			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-mllib_2.12</artifactId>
-			<version>2.4.1</version>
+			<version>3.0.0-preview</version>
 		</dependency>
 
 
 		<!-- https://mvnrepository.com/artifact/org.apache.spark/spark-streaming -->
 		<dependency>
 			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-streaming_2.11</artifactId>
-			<version>1.6.2</version>
+			<artifactId>spark-streaming_2.12</artifactId>
+			<version>3.0.0-preview</version>
 		</dependency>
 
 
@@ -53,9 +38,9 @@
 
 		<!-- https://mvnrepository.com/artifact/org.apache.spark/spark-streaming-twitter -->
 		<dependency>
-			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-streaming-twitter_2.11</artifactId>
-			<version>1.6.3</version>
+			<groupId>org.apache.bahir</groupId>
+			<artifactId>spark-streaming-twitter_2.12</artifactId>
+			<version>2.4.0</version>
 		</dependency>
 
 		<dependency>
@@ -108,7 +93,24 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>it.fabiano.bigdata.sparkstreming.es01.TwitterSentiment</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
+		
 		</plugins>
 	</build>
+
+	
 
 </project>

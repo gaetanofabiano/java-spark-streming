@@ -14,16 +14,17 @@ import org.apache.spark.streaming.twitter.TwitterUtils;
 
 import twitter4j.Status;
 /**
-* Java-Spark-Training-Course
-*
-* @author  Gaetano Fabiano
-* @version 1.0.0
-* @since   2019-07-19 
-*/
+ * Java-Spark-Training-Course
+ *
+ * @author  Gaetano Fabiano
+ * @version 1.0.0
+ * @since   2019-07-19 
+ */
 
 public class TwitterStreaming {
-	
-	
+
+
+	//Credentials
 	//Credentials
 	final static String consumerKey = "";
 	final static String consumerSecret = "";
@@ -34,10 +35,11 @@ public class TwitterStreaming {
 	public static void main(String[] args) throws InterruptedException {
 
 
+
 		//Logger less verbose
 		Logger.getLogger("org").setLevel(Level.ERROR);
 
-		
+
 		SparkConf sparkConf = new SparkConf().setAppName("TwitterStreaming").setMaster("local[*]");
 
 		JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, new Duration(2000));
@@ -49,28 +51,28 @@ public class TwitterStreaming {
 		System.setProperty("twitter4j.oauth.accessToken", accessToken);
 		System.setProperty("twitter4j.oauth.accessTokenSecret", accessTokenSecret);
 
-		
-		
-		String[] filters = {"trump"};
-		
-	
 
-		
-		
+
+		String[] filters = {"conte"};
+
+
+
+
+
 		//Stream
 		JavaReceiverInputDStream<Status> stream = TwitterUtils.createStream(jssc, filters);
 
 
 		//take words from twitter just to try the flatMap
 		JavaDStream<String> words = stream.flatMap( status -> Arrays.asList(status.getText().split(" ")).iterator() );
-		
+
 
 		//Try map functions here
 		JavaDStream<Object> user = stream.map(status -> status.getUser());
 
 		words.print();
 		user.print();
-		
+
 		jssc.start();
 		jssc.awaitTermination();
 	}
