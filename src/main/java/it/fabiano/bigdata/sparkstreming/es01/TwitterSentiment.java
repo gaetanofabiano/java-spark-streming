@@ -23,10 +23,7 @@ import twitter4j.Status;
 */
 public class TwitterSentiment  {
 
-	final static String consumerKey = "eD1fATQ0VtXCYEc3toSM1Xgng";
-	final static String consumerSecret = "KbAuly1xcly55lIB7CShl0JcK0saDHOci5cH1p2X9vV8HTvpcy";
-	final static String accessToken = "841603218-5S1KTpS6gOOcTPNeJMDqm2vtDRqGWGrX1aQfx2xM";
-	final static String accessTokenSecret = "YnUnqen0Oy024gyyCQ8h8wloirZi2mxgKdLz9g1UhQ7oE";
+	
 
 	public static void main(String[] args) throws InterruptedException  {
 
@@ -38,10 +35,10 @@ public class TwitterSentiment  {
 
 
 
-		System.setProperty("twitter4j.oauth.consumerKey", consumerKey);
-		System.setProperty("twitter4j.oauth.consumerSecret", consumerSecret);
-		System.setProperty("twitter4j.oauth.accessToken", accessToken);
-		System.setProperty("twitter4j.oauth.accessTokenSecret", accessTokenSecret);
+		System.setProperty("twitter4j.oauth.consumerKey", TwitterConfiguration.consumerKey);
+		System.setProperty("twitter4j.oauth.consumerSecret", TwitterConfiguration.consumerSecret);
+		System.setProperty("twitter4j.oauth.accessToken", TwitterConfiguration.accessToken);
+		System.setProperty("twitter4j.oauth.accessTokenSecret", TwitterConfiguration.accessTokenSecret);
 
 		SparkConf sparkConf = new SparkConf().setAppName("JavaTwitterHashTagJoinSentiments").setMaster("local[*]");
 		//SparkConf sparkConf = new SparkConf().setAppName("JavaTwitterHashTagJoinSentiments");
