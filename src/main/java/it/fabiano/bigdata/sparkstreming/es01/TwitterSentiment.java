@@ -23,18 +23,18 @@ import twitter4j.Status;
 */
 public class TwitterSentiment  {
 
-	final static String consumerKey = "";
-	final static String consumerSecret = "";
-	final static String accessToken = "";
-	final static String accessTokenSecret = "";
+	final static String consumerKey = "eD1fATQ0VtXCYEc3toSM1Xgng";
+	final static String consumerSecret = "KbAuly1xcly55lIB7CShl0JcK0saDHOci5cH1p2X9vV8HTvpcy";
+	final static String accessToken = "841603218-5S1KTpS6gOOcTPNeJMDqm2vtDRqGWGrX1aQfx2xM";
+	final static String accessTokenSecret = "YnUnqen0Oy024gyyCQ8h8wloirZi2mxgKdLz9g1UhQ7oE";
 
 	public static void main(String[] args) throws InterruptedException  {
 
 		//Logger
-		//Logger.getLogger("org").setLevel(Level.ERROR);
+		Logger.getLogger("org").setLevel(Level.ERROR);
 
 		
-		String[] filters = {"congiunti"};
+		String[] filters = {"trump"};
 
 
 
@@ -43,8 +43,8 @@ public class TwitterSentiment  {
 		System.setProperty("twitter4j.oauth.accessToken", accessToken);
 		System.setProperty("twitter4j.oauth.accessTokenSecret", accessTokenSecret);
 
-		//SparkConf sparkConf = new SparkConf().setAppName("JavaTwitterHashTagJoinSentiments").setMaster("master:7077");
-		SparkConf sparkConf = new SparkConf().setAppName("JavaTwitterHashTagJoinSentiments");
+		SparkConf sparkConf = new SparkConf().setAppName("JavaTwitterHashTagJoinSentiments").setMaster("local[*]");
+		//SparkConf sparkConf = new SparkConf().setAppName("JavaTwitterHashTagJoinSentiments");
 		
 		JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, new Duration(2000));
 
@@ -52,7 +52,7 @@ public class TwitterSentiment  {
 		
 		
 		JavaDStream<String> tweets = stream.map(status -> status.getText());
-		
+	
 		
 		
 		JavaPairDStream<String, String> tweetWithScoreDStream =
@@ -68,7 +68,8 @@ public class TwitterSentiment  {
 						"TWEET: "+tweetText, 
 						"SENTIMENT: "+SentimentAnalyzer.getSimplifiedSentiment(tweetText)));
 		
-		
+		tweetWithScoreDStream.print();
+
 		tweetWithSentiment.print();
 		jssc.start();
 		jssc.awaitTermination();

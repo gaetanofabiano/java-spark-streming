@@ -12,6 +12,7 @@ import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.twitter.TwitterUtils;
 
+import it.fabiano.bigdata.sparkstreming.es01.TwitterConfiguration;
 import twitter4j.Status;
 /**
  * Java-Spark-Training-Course
@@ -24,15 +25,14 @@ import twitter4j.Status;
 public class TwitterStreaming {
 
 
-	//Credentials
-	//Credentials
-	final static String consumerKey = "";
-	final static String consumerSecret = "";
-	final static String accessToken = "";
-	final static String accessTokenSecret = "";
+	
 
 
-	public static void main(String[] args) throws InterruptedException {
+	//Credentials
+
+	
+
+	public static void main(final String[] args) throws InterruptedException {
 
 
 
@@ -40,35 +40,33 @@ public class TwitterStreaming {
 		Logger.getLogger("org").setLevel(Level.ERROR);
 
 
-		SparkConf sparkConf = new SparkConf().setAppName("TwitterStreaming").setMaster("local[*]");
+		final SparkConf sparkConf = new SparkConf().setAppName("TwitterStreaming").setMaster("local[*]");
 
-		JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, new Duration(2000));
+		final JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, new Duration(2000));
 
 
 		// can use them to generate OAuth credentials
-		System.setProperty("twitter4j.oauth.consumerKey", consumerKey);
-		System.setProperty("twitter4j.oauth.consumerSecret", consumerSecret);
-		System.setProperty("twitter4j.oauth.accessToken", accessToken);
-		System.setProperty("twitter4j.oauth.accessTokenSecret", accessTokenSecret);
+		System.setProperty("twitter4j.oauth.consumerKey", TwitterConfiguration.consumerKey);
+		System.setProperty("twitter4j.oauth.consumerSecret", TwitterConfiguration.consumerSecret);
+		System.setProperty("twitter4j.oauth.accessToken", TwitterConfiguration.accessToken);
+		System.setProperty("twitter4j.oauth.accessTokenSecret", TwitterConfiguration.accessTokenSecret);
 
 
 
-		String[] filters = {"conte"};
+		final String[] filters = {"conte"};
 
-
-
-
+	
 
 		//Stream
-		JavaReceiverInputDStream<Status> stream = TwitterUtils.createStream(jssc, filters);
+	    JavaReceiverInputDStream<Status> stream = TwitterUtils.createStream(jssc, filters);
 
 
 		//take words from twitter just to try the flatMap
-		JavaDStream<String> words = stream.flatMap( status -> Arrays.asList(status.getText().split(" ")).iterator() );
+		 JavaDStream<String> words = stream.flatMap( status -> Arrays.asList(status.getText().split(" ")).iterator() );
 
 
 		//Try map functions here
-		JavaDStream<Object> user = stream.map(status -> status.getUser());
+		 JavaDStream<Object> user = stream.map(status -> status.getUser());
 
 		words.print();
 		user.print();
